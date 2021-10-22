@@ -1,3 +1,7 @@
+using ElmahCore;
+using ElmahCore.Mvc;
+using ElmahCore.Sql;
+using Livraria.Api.MiddleWares;
 using Livraria.Domain.Handlers;
 using Livraria.Domain.Interfaces.Respositories;
 using Livraria.Infra.Data.DataContexts;
@@ -49,6 +53,19 @@ namespace Livraria.Api
 
             #endregion Handlers
 
+            #region Elmah
+            services.AddElmah();
+
+            services.AddElmah<XmlFileErrorLog>(options => {
+                options.LogPath = "~/log";
+            });
+
+            services.AddElmah<SqlErrorLog>(options =>
+            {
+                options.ConnectionString = appSettings.ConnectionString;
+            });
+            #endregion
+
             services.AddControllers();
             
             services.AddSwaggerGen(c =>
@@ -68,9 +85,13 @@ namespace Livraria.Api
 
             app.UseHttpsRedirection();
 
+            app.UseMiddleware<ExceptionMiddleware>();
+
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthorization();            
+
+            app.UseElmah();
 
             app.UseEndpoints(endpoints =>
             {

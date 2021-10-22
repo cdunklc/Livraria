@@ -4,6 +4,7 @@ using Livraria.Domain.Interfaces.Respositories;
 using Livraria.Domain.Query;
 using Livraria.Infra.Interfaces.Commands;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace Livraria.Api.Controllers
